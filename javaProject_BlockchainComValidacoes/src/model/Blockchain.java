@@ -8,6 +8,7 @@ public class Blockchain implements Blockchain_IF {
 	
 	//attributes
 	private ArrayList<Block> chain;
+	private int difficulty = 5;
 
 	//construct
 	public Blockchain() {
@@ -30,7 +31,7 @@ public class Blockchain implements Blockchain_IF {
     	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
     	transactions.add(coinBaseTransaction);
     	
-    	Block genesisBlock = new Block(0, transactions, "0");
+    	Block genesisBlock = new Block(0, transactions, "0", this.difficulty);
     	
         this.chain.add(genesisBlock);
     }
@@ -49,8 +50,8 @@ public class Blockchain implements Blockchain_IF {
     		Block previousBlock = this.chain.get(indexCurrentBlock - 1);
     		
     		// Atualiza o hash do bloco atual e do anterior por segurança
-    		currentBlock.updateHashCode();
-    		previousBlock.updateHashCode();
+    		currentBlock.checkBlock(this.difficulty);
+    		previousBlock.checkBlock(this.difficulty);
     		
     		// Verifica se a hash do bloco anterior corresponde ao hash que está no bloco atual
     		if(!currentBlock.getPreviousHash().equals(previousBlock.getHash())){
@@ -91,6 +92,10 @@ public class Blockchain implements Blockchain_IF {
 	
 	public ArrayList<Block> getChain() {
 		return this.chain;
+	}
+	
+	public int getDifficulty() {
+		return this.difficulty;
 	}
 
 	//toString

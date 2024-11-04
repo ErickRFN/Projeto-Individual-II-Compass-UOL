@@ -21,11 +21,14 @@ public class Main {
         
         System.out.println("\n-> Para iniciar, irei gerar uma nova \nblockchain e adicionar a primeira transação"
         		+ "\ncoinbase no bloco Gênesis direcionada \npara mim mesmo.");
-
+        
         threePoints();
         Blockchain blockchain = new Blockchain();
         System.out.println("\n" + TextColor.GREEN_BOLD + "BLOCKCHAIN GERADA COM SUCESSO" + TextColor.RESET);
         Thread.sleep(1500);
+        
+        System.out.println("\n-> Lembrando que cada bloco é minerado \n(encontrado o nonce correspondente \na dificuldade atualmente utilizada)");
+        System.out.println("-> Dificuldade da mineração usada: " + blockchain.getDifficulty());
         
         Thread.sleep(1000);
         
@@ -118,7 +121,11 @@ public class Main {
         transactions.add(new Transaction("Erick", "Aryosmar", 200.78));
         transactions.add(new Transaction("Erick", "Pedro", 250.02));
         
-        Block block1 = new Block(blockchain.getLatestBlock().getId()+1, (ArrayList<Transaction>) transactions.clone(), blockchain.getLatestBlock().getHash());
+        Block block1 = new Block(blockchain.getLatestBlock().getId()+1,
+        	(ArrayList<Transaction>) transactions.clone(),
+        	blockchain.getLatestBlock().getHash(),
+        	blockchain.getDifficulty()
+        );
         blockchain.addBlock(block1);
         transactions.clear();
         
@@ -127,7 +134,11 @@ public class Main {
         transactions.add(new Transaction("Erick", "Sangela", 307.87));
         transactions.add(new Transaction("Pedro", "Gabriel", 179.44));
         
-        Block block2 = new Block(blockchain.getLatestBlock().getId()+1, (ArrayList<Transaction>) transactions.clone(), blockchain.getLatestBlock().getHash());
+        Block block2 = new Block(blockchain.getLatestBlock().getId()+1,
+        	(ArrayList<Transaction>) transactions.clone(),
+        	blockchain.getLatestBlock().getHash(),
+        	blockchain.getDifficulty()
+        );
         blockchain.addBlock(block2);
         transactions.clear();
 	}
@@ -138,7 +149,7 @@ public class Main {
         transactions.add(new Transaction("Erick", "Hacker 1", 200.78));
         transactions.add(new Transaction("Erick", "Hacker 2", 250.02));
 		
-		blockchain.getChain().get(1).setTransactions(transactions);;
+		blockchain.getChain().get(1).setTransactions(transactions, blockchain.getDifficulty());;
 	}
 	
 	public static void fixBlockchainTampering(Blockchain blockchain) {
@@ -147,7 +158,7 @@ public class Main {
         transactions.add(new Transaction("Erick", "Aryosmar", 200.78));
         transactions.add(new Transaction("Erick", "Pedro", 250.02));
 		
-		blockchain.getChain().get(1).setTransactions(transactions);
+		blockchain.getChain().get(1).setTransactions(transactions, blockchain.getDifficulty());
 	}
 	
 	public static void validateBlockchain(Blockchain blockchain) {

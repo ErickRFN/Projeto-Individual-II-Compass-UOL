@@ -1,7 +1,6 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import interfaces.Block_IF;
 import util.HashUtil;
@@ -20,7 +19,7 @@ public class Block implements Block_IF {
 	private int nonce;
 	
 	//constructor
-	public Block(int id, ArrayList<Transaction> transactions, String previousHash) {
+	public Block(int id, ArrayList<Transaction> transactions, String previousHash, int difficulty) {
 		// Guardando atributos já transmitidos
 		this.id = id;
 		this.transactions = transactions;
@@ -29,11 +28,8 @@ public class Block implements Block_IF {
         // Solicita a hora local, formata ela no padrão BR e guarda no carimbo de tempo
         this.timestamp = generateTimestamp();
 		
-        // Gera um número aleatório para o nonce, já que o processo de mineração não está implementado
-        this.nonce = generateRandomNonce();
-        
-        // Calcula o hash do bloco
-        this.hash = calculateHash();;
+        // Gera o nonce, ou seja, realiza o processo de mineração do Proof of Work(PoW)
+        mineBlock(difficulty);
 	}
 	
 	//methods
@@ -43,12 +39,28 @@ public class Block implements Block_IF {
         return DTFormat.format(currentDateTime);
 	}
 	
-	private int generateRandomNonce() {
-		Random random = new Random();
-        return random.nextInt(1000000);
+	private void mineBlock(int difficulty) {
+	    // Define a quantidade de "0000" de prefixo com base na dificuldade
+	    String target = new String(new char[difficulty]).replace('\0', '0');
+	    
+	    // Inicializa o nonce em 0 e tenta encontrar um hash válido
+	    this.nonce = 0;
+	    this.hash = calculateHash();
+	    
+	    // Loop até encontrar um hash que tenha a dificuldade
+	    while (!this.hash.substring(0, difficulty).equals(target)) {
+	        this.nonce++;
+	        this.hash = calculateHash(); 
+	    }
+	    
+	    System.out.println("\n-> Bloco minerado com sucesso! Nonce: " + this.nonce + ", Hash: " + this.hash);
 	}
 	
-	public void updateHashCode() {
+	private void updateBlock(int difficulty) {
+		mineBlock(difficulty);
+	}
+	
+	public void checkBlock(int difficulty) {
 		this.hash = calculateHash();
 	}
 	
@@ -93,9 +105,9 @@ public class Block implements Block_IF {
 		return this.nonce;
 	}
 	
-	public void setTransactions(ArrayList<Transaction> transactions) {
+	public void setTransactions(ArrayList<Transaction> transactions, int difficulty) {
 		this.transactions = transactions;
-		updateHashCode();
+		updateBlock(difficulty);
 	}
 
 }
