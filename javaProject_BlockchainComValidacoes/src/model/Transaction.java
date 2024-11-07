@@ -5,26 +5,26 @@ import interfaces.Transaction_IF;
 public class Transaction implements Transaction_IF {
 	
 	//atributes
-	private String sender;
-    private String receiver;
+	private String addressSender;
+    private String addressReceiver;
     private double amount;
 
     //constructor
     public Transaction(String sender, String receiver, double amount) {
-        this.sender = sender;
-        this.receiver = receiver;
+        this.addressSender = sender;
+        this.addressReceiver = receiver;
         this.amount = amount;
     }
     
     //getters and setters
 	@Override
 	public String getSender() {
-		return sender;
+		return addressSender;
 	}
 
 	@Override
 	public String getReceiver() {
-		return receiver;
+		return addressReceiver;
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class Transaction implements Transaction_IF {
 	//to string method
 	@Override
     public String toString() {
-        return sender + " -> " + receiver + ": " + amount + "\n";
+        return addressSender + " -> " + addressReceiver + ": " + amount + "\n";
     }
 	
 }
