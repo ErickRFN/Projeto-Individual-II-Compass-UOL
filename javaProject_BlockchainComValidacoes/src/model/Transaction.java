@@ -27,8 +27,8 @@ public class Transaction implements Transaction_IF {
             + senderAddress.substring(0, 20) + " -> " + receiverAddress.substring(0, 20) + " = " + amount);
             
             // Atualiza o saldo das wallets
-            sender.updateBalance(-amount);
-            receiver.updateBalance(amount);
+            sender.addTransaction(this);
+            receiver.addTransaction(this);
             
             System.out.println("- SALDOS ATUALIZADOS: " 
             + "\nSender: " + sender.getBalance() + "\nReceiver: " + receiver.getBalance() + "\n" + TextColor.RESET);
@@ -59,7 +59,7 @@ public class Transaction implements Transaction_IF {
             + this.addressSender + " -> " + minerAddress.substring(0, 20) + " = " + amount);
             
             // Atualiza o saldo da wallet
-            miner.updateBalance(amount);
+            miner.addTransaction(this);
             
             System.out.println("- SALDO ATUALIZADO: " 
             + "\nMiner: " + miner.getBalance() + "\n" + TextColor.RESET);
@@ -110,12 +110,12 @@ public class Transaction implements Transaction_IF {
     
     //getters and setters
 	@Override
-	public String getSender() {
+	public String getAddressSender() {
 		return addressSender;
 	}
 
 	@Override
-	public String getReceiver() {
+	public String getAddressReceiver() {
 		return addressReceiver;
 	}
 

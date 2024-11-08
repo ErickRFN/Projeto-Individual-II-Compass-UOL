@@ -2,8 +2,8 @@ package interfaces;
 
 public interface Transaction_IF {
 
-    String getSender();
-    String getReceiver();
+    String getAddressSender();
+    String getAddressReceiver();
     double getAmount();
 
     @Override

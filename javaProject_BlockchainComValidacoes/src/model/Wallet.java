@@ -22,6 +22,8 @@ public class Wallet implements Wallet_IF {
 	@SuppressWarnings("unused")
 	private PrivateKey privateKey; // Por enquanto, sem uso
 	private String address;
+	
+	private ArrayList<Transaction> transactions;
 	private Double balance;
 	
 	//constructor
@@ -29,6 +31,8 @@ public class Wallet implements Wallet_IF {
 		this.nickname = nickname;
         generateKeyPair();	
         this.address = generateAddress();
+        
+        this.transactions = new ArrayList<>();
         this.balance = 0.0;
     }
 	
@@ -84,8 +88,16 @@ public class Wallet implements Wallet_IF {
 	}
 	
 	@Override
-	public void updateBalance(Double attBalance) {
-		this.balance += attBalance;
+	public void addTransaction(Transaction transaction) {
+		
+		this.transactions.add(transaction);
+		
+		if(transaction.getAddressSender().equals(this.address)) {
+			updateBalance(-transaction.getAmount());
+		}else {
+			updateBalance(transaction.getAmount());
+		}
+		
 	}
 	
 	// auxiliary methods
@@ -145,6 +157,10 @@ public class Wallet implements Wallet_IF {
         return numericPart.toString();
 	}
 	
+	private void updateBalance(Double attBalance) {
+		this.balance += attBalance;
+	}
+	
 	private String generateHexFromPublicKey() {
         try {
         	
@@ -165,6 +181,40 @@ public class Wallet implements Wallet_IF {
             throw new RuntimeException("Erro ao gerar parte hexadecimal do endereço", e);
             
         }
+	}
+	
+	public void resetWallet() {
+		this.transactions.clear();
+		this.balance = 0.0;
+	}
+	
+	public void displayTransactionAndBalance() {
+		System.out.println("Endereço da Wallet: ");
+		System.out.println("# " + this.address.substring(0, 20));
+		System.out.println("Nickname da Wallet: ");
+		System.out.println("# " + this.nickname);
+		
+		
+		if(this.transactions.size() == 0) {
+			System.out.println("## Nenhuma transação registrada ##\n");
+			System.out.println("Saldo da carteira: " + this.balance + "\n");
+            return;
+		}
+		
+		int i = 0;
+		for(Transaction transaction : this.transactions) {
+			
+			if(transaction.getAddressSender().equals(this.address)) {
+				System.out.println(i + " - " + "SENT");
+			}else {
+				System.out.println(i + " - " + "RECEIVED");
+			}
+			i++;
+			
+			System.out.printf("%s", transaction);
+		}
+		
+		System.out.println("\nSaldo da carteira: " + this.balance + "\n");
 	}
 	
 	// getters and setters
@@ -193,6 +243,11 @@ public class Wallet implements Wallet_IF {
 		return this.balance;
 	}
 	
+	@Override
+	public ArrayList<Transaction> getTransactions() {
+		return this.transactions;
+	}
+	
 	// toString
 	@Override
 	public String toString() {
@@ -201,7 +256,6 @@ public class Wallet implements Wallet_IF {
 	           "\n  Public Key: " + this.getPublicKey().getEncoded().toString() +
 	           "\n  Private Key: #ACESSO RESTRITO#" +
 	           "\n  Address: " + this.address +
-	           "\n  Balance: " + this.balance +
 	           "\n}";
 	}
 

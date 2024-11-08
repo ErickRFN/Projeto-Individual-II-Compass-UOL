@@ -106,10 +106,10 @@ public class Main {
         validateBlockchain(blockchain);
         Thread.sleep(1500);
         
-        System.out.println("\n-> Agora, vou exibir como ficou as Wallets, em \n"
-        		+ "especial o saldo de cada após essas transações\n");
+        System.out.println("\n-> Agora, vou exibir o histórico de transações\n"
+        		+ "das wallets e os seus saldos\n");
         
-        displayWallets(wallets);
+        displayTransactionAndBalanceWallet(wallets);
         
         System.out.println("-> Por fim, digamos que dois Hackers "
         		+ "\ninvadiram e adulteraram as transações \ndo bloco com ID = 1");
@@ -192,9 +192,20 @@ public class Main {
 		System.out.println();
 	}
 	
+	public static void displayTransactionAndBalanceWallet(ArrayList<Wallet> wallets) throws InterruptedException{
+		int i = 0;
+		for(Wallet wallet : wallets){
+			System.out.println(i + "-");
+			wallet.displayTransactionAndBalance();
+			i++;
+            Thread.sleep(500);
+        }
+		System.out.println();
+	}
+	
 	public static void resetWallets(ArrayList<Wallet> wallets) {
 		for(Wallet wallet : wallets){
-			wallet.updateBalance(-wallet.getBalance());
+			wallet.resetWallet();
         }
 	}
 	
@@ -256,13 +267,13 @@ public class Main {
 	public static void adulterateBlockchain(Blockchain blockchain,
 			ArrayList<Wallet> wallets) {
 		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-		wallets.get(0).updateBalance(-blockchain.getAmountCoinBase());
+		wallets.get(0).getTransactions().remove(1);
+		wallets.get(0).getTransactions().remove(1);
+		wallets.get(0).getTransactions().remove(1);
 		
-        transactions.add(new Transaction(wallets.get(0), blockchain.getAmountCoinBase()));
+        transactions.add(new Transaction(wallets.get(5), blockchain.getAmountCoinBase()));
         transactions.add(new Transaction(wallets.get(0), wallets.get(5), 200.78));
         transactions.add(new Transaction(wallets.get(0), wallets.get(6), 250.02));
-        
-        wallets.get(0).updateBalance(-blockchain.getAmountCoinBase());
 		
 		blockchain.getChain().get(1).setTransactions(transactions, blockchain.getDifficulty());;
 	}
