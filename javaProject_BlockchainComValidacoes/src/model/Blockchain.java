@@ -9,11 +9,12 @@ public class Blockchain implements Blockchain_IF {
 	//attributes
 	private ArrayList<Block> chain;
 	private int difficulty = 5;
+	private Double amountCoinBase = 1000.00;
 
 	//construct
-	public Blockchain() {
+	public Blockchain(Wallet creatorsWallet) {
         initializeBlockchain();
-        createGenesisBlock();
+        createGenesisBlock(creatorsWallet);
     }
 	
 	public Blockchain(ArrayList<Block> backupChain) {
@@ -25,9 +26,9 @@ public class Blockchain implements Blockchain_IF {
 		this.chain = new ArrayList<Block>();
 	}
 	
-    private void createGenesisBlock() {
+    private void createGenesisBlock(Wallet creatorsWallet) {
     	// Criando a coinbase transaction destinada a mim no genesis block
-    	Transaction coinBaseTransaction = new Transaction("CoinBase", "Erick", 1000.00);
+    	Transaction coinBaseTransaction = new Transaction(creatorsWallet, this.amountCoinBase);
     	ArrayList<Transaction> transactions = new ArrayList<Transaction>();
     	transactions.add(coinBaseTransaction);
     	

@@ -17,14 +17,19 @@ import interfaces.Wallet_IF;
 public class Wallet implements Wallet_IF {
 	
 	//attributes
+	private String nickname;
 	private PublicKey publicKey;
+	@SuppressWarnings("unused")
 	private PrivateKey privateKey; // Por enquanto, sem uso
 	private String address;
+	private Double balance;
 	
 	//constructor
-	public Wallet() {
+	public Wallet(String nickname) {
+		this.nickname = nickname;
         generateKeyPair();	
         this.address = generateAddress();
+        this.balance = 0.0;
     }
 	
 	// methods
@@ -76,6 +81,11 @@ public class Wallet implements Wallet_IF {
 		
 		// Une tudo e retorna o endereço da carteira
 		return prefix + numericPart + hexPart;
+	}
+	
+	@Override
+	public void updateBalance(Double attBalance) {
+		this.balance += attBalance;
 	}
 	
 	// auxiliary methods
@@ -159,6 +169,16 @@ public class Wallet implements Wallet_IF {
 	
 	// getters and setters
 	@Override
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	@Override
+	public String getNickname() {
+		return this.nickname;
+	}
+	
+	@Override
 	public PublicKey getPublicKey() {
 		return this.publicKey;
 	}
@@ -167,13 +187,21 @@ public class Wallet implements Wallet_IF {
 	public String getAddress() {
 		return this.address;
 	}
+
+	@Override
+	public Double getBalance() {
+		return this.balance;
+	}
 	
 	// toString
 	@Override
 	public String toString() {
 	    return "Wallet {" +
-	           "\n  Public Key: " + this.getPublicKey() +
+	    	   "\n  Nickname: " + this.nickname +
+	           "\n  Public Key: " + this.getPublicKey().getEncoded().toString() +
+	           "\n  Private Key: #ACESSO RESTRITO#" +
 	           "\n  Address: " + this.address +
+	           "\n  Balance: " + this.balance +
 	           "\n}";
 	}
 

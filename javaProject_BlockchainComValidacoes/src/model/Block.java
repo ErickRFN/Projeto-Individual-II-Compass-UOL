@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import interfaces.Block_IF;
 import util.HashUtil;
+import util.TextColor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -53,7 +54,8 @@ public class Block implements Block_IF {
 	        this.hash = calculateHash(); 
 	    }
 	    
-	    System.out.println("\n-> Bloco minerado com sucesso! Nonce: " + this.nonce + ", Hash: " + this.hash);
+	    System.out.println(TextColor.BLUE_BOLD + "-> Bloco minerado com sucesso! Nonce: " 
+	    + this.nonce + ", Hash: " + this.hash + TextColor.RESET);
 	}
 	
 	private void updateBlock(int difficulty) {
