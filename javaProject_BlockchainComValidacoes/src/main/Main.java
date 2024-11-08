@@ -111,7 +111,7 @@ public class Main {
         
         displayWallets(wallets);
         
-        System.out.println("\n-> Por fim, digamos que dois Hackers "
+        System.out.println("-> Por fim, digamos que dois Hackers "
         		+ "\ninvadiram e adulteraram as transações \ndo bloco com ID = 1");
         
         Thread.sleep(2000);
@@ -151,6 +151,7 @@ public class Main {
         
         Thread.sleep(1500);
         threePoints();
+        resetWallets(wallets);
         blockchain = new Blockchain(wallets.get(0));
         addTransactionToBlockAndBlockchain(blockchain, wallets);
         System.out.println("\n" + TextColor.GREEN_BOLD + "BLOCKCHAIN REFEITA COM SUCESSO" + TextColor.RESET);
@@ -191,6 +192,12 @@ public class Main {
 		System.out.println();
 	}
 	
+	public static void resetWallets(ArrayList<Wallet> wallets) {
+		for(Wallet wallet : wallets){
+			wallet.updateBalance(-wallet.getBalance());
+        }
+	}
+	
 	public static void examplesOfInvalidAddresses() throws InterruptedException {
 		
 		Thread.sleep(1500);
@@ -220,7 +227,7 @@ public class Main {
 			ArrayList<Wallet> wallets) {
 		// Criando e adicionando o primeiro bloco
         ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-        transactions.add(new Transaction(wallets.get(0), 1000.00));
+        transactions.add(new Transaction(wallets.get(0), blockchain.getAmountCoinBase()));
         transactions.add(new Transaction(wallets.get(0), wallets.get(1), 200.78));
         transactions.add(new Transaction(wallets.get(0), wallets.get(2), 250.02));
         
@@ -233,7 +240,7 @@ public class Main {
         transactions.clear();
         
         // Criando e adicionando o segundo bloco
-        transactions.add(new Transaction(wallets.get(0), 1000.00));
+        transactions.add(new Transaction(wallets.get(0), blockchain.getAmountCoinBase()));
         transactions.add(new Transaction(wallets.get(0), wallets.get(3), 307.87));
         transactions.add(new Transaction(wallets.get(2), wallets.get(4), 179.44));
         
@@ -249,9 +256,13 @@ public class Main {
 	public static void adulterateBlockchain(Blockchain blockchain,
 			ArrayList<Wallet> wallets) {
 		ArrayList<Transaction> transactions = new ArrayList<Transaction>();
-        transactions.add(new Transaction(wallets.get(1), 1000.00));
-        transactions.add(new Transaction(wallets.get(1), wallets.get(5), 200.78));
-        transactions.add(new Transaction(wallets.get(1), wallets.get(6), 250.02));
+		wallets.get(0).updateBalance(-blockchain.getAmountCoinBase());
+		
+        transactions.add(new Transaction(wallets.get(0), blockchain.getAmountCoinBase()));
+        transactions.add(new Transaction(wallets.get(0), wallets.get(5), 200.78));
+        transactions.add(new Transaction(wallets.get(0), wallets.get(6), 250.02));
+        
+        wallets.get(0).updateBalance(-blockchain.getAmountCoinBase());
 		
 		blockchain.getChain().get(1).setTransactions(transactions, blockchain.getDifficulty());;
 	}

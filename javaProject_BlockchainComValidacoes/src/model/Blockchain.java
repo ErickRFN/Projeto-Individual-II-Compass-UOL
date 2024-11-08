@@ -98,6 +98,11 @@ public class Blockchain implements Blockchain_IF {
 	public int getDifficulty() {
 		return this.difficulty;
 	}
+	
+	@Override
+	public Double getAmountCoinBase() {
+		return this.amountCoinBase;
+	}
 
 	//toString
 	@Override

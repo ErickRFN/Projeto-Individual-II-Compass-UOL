@@ -8,6 +8,7 @@ public interface Blockchain_IF {
     void addBlock(Block newBlock);
     boolean isChainValid();
     void displayChain();
+    Double getAmountCoinBase();
     
 }
 
